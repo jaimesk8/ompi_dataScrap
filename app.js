@@ -170,7 +170,165 @@
                     x.click();
                 };
             })
-            .catch(error => console.error('Error:', error));  
+            .catch(error => console.error('Error:', error));
+
+            //year 2027
+            fetch(yr27)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo27").innerHTML = titleChart;
+           
+                new Chart('myCanvas27', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv27 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-27.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+            //year 2029
+            fetch(yr29)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo26").innerHTML = titleChart;
+           
+                new Chart('myCanvas29', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv29 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-29.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+
+
+
 
             //quarter Q1-24 
             fetch(quarter1_24)
