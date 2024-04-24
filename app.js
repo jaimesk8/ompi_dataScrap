@@ -4,6 +4,8 @@
 
         const yr25 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-25/0/0/0/1');
         const yr26 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-26/0/0/0/1');
+        const yr27 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-27/0/0/0/1');
+        const yr29 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-29/0/0/0/1');
 
         const quarter1_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ1-24/0/0/0/1');
         const quarter2_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ2-24/0/0/0/1');
