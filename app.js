@@ -1,7 +1,8 @@
  const feedDisplay = document.querySelector("#data")
       
         const d = new Date();
-
+        const spel = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/SPELBASE/0/I')
+        const ptel = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/PTELBASE/0/I')
         const yr25 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-25/0/0/0/1');
         const yr25France = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FFBYR-25/0/0/0/1');
         const yr25Germany = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FDBYR-25/0/0/0/1');
@@ -1303,6 +1304,156 @@
                     var x = document.createElement("A");
                     x.setAttribute("href", CsvString);
                     x.setAttribute("download", "Spain_year25.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+            })
+            .catch(error => console.error('Error:', error)); 
+
+            //SPEL  
+            fetch(spel)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoSPEL").innerHTML = titleChart;
+
+                new Chart('myCanvasSPEL', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvSPEL = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "SPEL.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+            })
+            .catch(error => console.error('Error:', error)); 
+
+            //SPEL  
+            fetch(ptel)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoPTEL").innerHTML = titleChart;
+
+                new Chart('myCanvasPTEL', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvPTEL = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "PTEL.csv");
                     document.body.appendChild(x);
                     x.click();
                 };
