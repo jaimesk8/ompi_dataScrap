@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Omip Get Data</title>
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"
@@ -13,8 +14,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <!-- TO:DO Implement the excel exporter-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         p, div, button {
             font-family: Helvetica, sans-serif;
@@ -29,7 +28,7 @@
         }
         .data {
             padding: 1%;
-           
+            margin-right: -10%;
             border-radius: 5px;
             height: 20%;
             width: 20%;
@@ -37,83 +36,124 @@
     </style>
 </head>
 <body>
+    <!--=============== REMIXICONS ===============-->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+<!--==================== HEADER ====================-->
+<header class="header" id="header">
+  <nav class="nav container">
+    <a href="index.html" class="nav__logo">OMIP Data Scrap</a>
+
+    <div class="nav__menu" id="nav-menu">
+      <ul class="nav__list">
+        <li class="nav__item">
+          <a href="https://www.omip.pt/pt" class="nav__link">Source</a>
+        </li>
+
+        <li class="nav__item">
+          <a href="https://github.com/jaimesk8" class="nav__link">About Me</a>
+        </li>
+
+        <li class="nav__item">
+          <a href="index.html" class="button">Home</a>
+        </li>
+      </ul>
+
+      <!-- Close button -->
+      <div class="nav__close" id="nav-close">
+        <i class="ri-close-line"></i>
+      </div>
+    </div>
+
+    <div class="nav__actions">
+
+      <!-- Toggle button -->
+      <div class="nav__toggle" id="nav-toggle">
+        <i class="ri-apps-2-line"></i>
+      </div>
+    </div>
+  </nav>
+</header>
+    <br>
     <div>
-        <h3 style="font-family: Arial, Helvetica, sans-serif;">Preços OMIP Eletricidade Portugal FPB-Portugal</h3>
+        .
     </div>
     <br>
-    <div id="data" class="data">PTEL <button onclick="exportToCsvPTEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoPTEL"></p></div>
-    <canvas id="myCanvasPTEL" ></canvas>
-    <br>
-    <div id="data" class="data">SPEL<button onclick="exportToCsvSPEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSPEL"></p></div>
-    <canvas id="myCanvasSPEL" ></canvas>
-    <br>
-    <div id="data" class="data">YR-25 
-        <button onclick="exportToCsv()">Export to CSV</button>
-        <p>Fetched at:</p> 
-        <p id="demo"></p>
-     </div>
-    <canvas id="myCanvas"></canvas>
-    <br>
-    <div id="data" class="data">YR-26 
-        <button onclick="exportToCsv26()">Export to CSV</button>
-        <p>Fetched at:</p> 
-        <p id="demo26"></p>
-     </div>
-    <canvas id="myCanvas26"></canvas>
-    <br>
-     <div id="data" class="data">YR-27 
-        <button onclick="exportToCsv27()">Export to CSV</button>
-        <p>Fetched at:</p> 
-        <p id="demo27"></p>
-     </div>
-    <canvas id="myCanvas27"></canvas>
-    <br>
-     <div id="data" class="data">YR-29 
-        <button onclick="exportToCsv29()">Export to CSV</button>
-        <p>Fetched at:</p> 
-        <p id="demo29"></p>
-     </div>
-    <canvas id="myCanvas29"></canvas>
-    <br>
-    <div id="data" class="data">Q1-24 <button onclick="exportToCsv2()">Export to CSV</button> <p>Fetched at:</p> <p id="demo1"></p>
+    <div style="margin: 10%;">
+        <div id="data" class="data"><h3>PTEL</h3><br> <button onclick="exportToCsvPTEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoPTEL"></p></div>
+        <canvas id="myCanvasPTEL" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>STEL</h3><br><button onclick="exportToCsvSPEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSPEL"></p></div>
+        <canvas id="myCanvasSPEL" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-25 OMIP</h3><br>
+            <button onclick="exportToCsv()">Export to CSV</button>
+            <p>Fetched at:</p> 
+            <p id="demo"></p>
+        </div>
+        <canvas id="myCanvas"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-26 OMIP</h3><br>
+            <button onclick="exportToCsv26()">Export to CSV</button>
+            <p>Fetched at:</p> 
+            <p id="demo26"></p>
+        </div>
+        <canvas id="myCanvas26"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-27 OMIP</h3><br>
+            <button onclick="exportToCsv27()">Export to CSV</button>
+            <p>Fetched at:</p> 
+            <p id="demo27"></p>
+        </div>
+        <canvas id="myCanvas27"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-29 OMIP</h3><br>
+            <button onclick="exportToCsv29()">Export to CSV</button>
+            <p>Fetched at:</p> 
+            <p id="demo29"></p>
+        </div>
+        <canvas id="myCanvas29"></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q1-24</h3><br> <button onclick="exportToCsv2()">Export to CSV</button> <p>Fetched at:</p> <p id="demo1"></p>
+        </div>
+        <canvas id="myCanvas2" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q2-24</h3><br> <button onclick="exportToCsv3()">Export to CSV</button> <p>Fetched at:</p> <p id="demo2"></p></div>
+        <canvas id="myCanvas3" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q3-24</h3><br><button onclick="exportToCsv4()">Export to CSV</button> <p>Fetched at:</p> <p id="demo3"></p></div>
+        <canvas id="myCanvas4" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q4-24</h3><br> <button onclick="exportToCsv5()">Export to CSV</button> <p>Fetched at:</p> <p id="demo4"></p></div>
+        <canvas id="myCanvas5" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Março 24</h3><br> <button onclick="exportToCsv6()">Export to CSV</button><p>Fetched at:</p> <p id="demo5"></p></div>
+        <canvas id="myCanvas6" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Abril 24</h3><br><button onclick="exportToCsv7()">Export to CSV</button> <p>Fetched at:</p> <p id="demo6"></p></div>
+        <canvas id="myCanvas7" ></canvas>
+        <br>
+        <div id="data" class="data">Maio 24 <button onclick="exportToCsv8()">Export to CSV</button> <p>Fetched at:</p> <p id="demo7"></p></div>
+        <canvas id="myCanvas8" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Junho 24</h3><br> <button onclick="exportToCsv9()">Export to CSV</button> <p>Fetched at:</p> <p id="demo8"></p></div>
+        <canvas id="myCanvas9" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Julho 24</h3><br> <button onclick="exportToCsv10()">Export to CSV</button> <p>Fetched at:</p> <p id="demo9"></p></div>
+        <canvas id="myCanvas10" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Agostop 24</h3><br> <button onclick="exportToCsv11()">Export to CSV</button> <p>Fetched at:</p> <p id="demo10"></p></div>
+        <canvas id="myCanvas11" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Spain year 25</h3><br> <button onclick="exportToCsvSpain25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSpain25"></p></div>
+        <canvas id="myCanvasSpain25" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>France year 25 </h3><br><button onclick="exportToCsvFrance25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoFrance25"></p></div>
+        <canvas id="myCanvasFrance25" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Germany year 25 </h3><br><button onclick="exportToCsvGermany25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoGermany25"></p></div>
+        <canvas id="myCanvasGermany25" ></canvas>
     </div>
-    <canvas id="myCanvas2" ></canvas>
-    <br>
-    <div id="data" class="data">Q2-24 <button onclick="exportToCsv3()">Export to CSV</button> <p>Fetched at:</p> <p id="demo2"></p></div>
-    <canvas id="myCanvas3" ></canvas>
-    <br>
-    <div id="data" class="data">Q3-24 <button onclick="exportToCsv4()">Export to CSV</button> <p>Fetched at:</p> <p id="demo3"></p></div>
-    <canvas id="myCanvas4" ></canvas>
-    <br>
-    <div id="data" class="data">Q4-24 <button onclick="exportToCsv5()">Export to CSV</button> <p>Fetched at:</p> <p id="demo4"></p></div>
-    <canvas id="myCanvas5" ></canvas>
-    <br>
-    <div id="data" class="data">MAR-24 <button onclick="exportToCsv6()">Export to CSV</button><p>Fetched at:</p> <p id="demo5"></p></div>
-    <canvas id="myCanvas6" ></canvas>
-    <br>
-    <div id="data" class="data">Abril-24 <button onclick="exportToCsv7()">Export to CSV</button> <p>Fetched at:</p> <p id="demo6"></p></div>
-    <canvas id="myCanvas7" ></canvas>
-    <br>
-    <div id="data" class="data">Maio-24 <button onclick="exportToCsv8()">Export to CSV</button> <p>Fetched at:</p> <p id="demo7"></p></div>
-    <canvas id="myCanvas8" ></canvas>
-    <br>
-    <div id="data" class="data">Junho-24 <button onclick="exportToCsv9()">Export to CSV</button> <p>Fetched at:</p> <p id="demo8"></p></div>
-    <canvas id="myCanvas9" ></canvas>
-     <br>
-    <div id="data" class="data">Julho-24 <button onclick="exportToCsv10()">Export to CSV</button> <p>Fetched at:</p> <p id="demo9"></p></div>
-    <canvas id="myCanvas10" ></canvas>
-     <br>
-    <div id="data" class="data">Agosto-24 <button onclick="exportToCsv11()">Export to CSV</button> <p>Fetched at:</p> <p id="demo10"></p></div>
-    <canvas id="myCanvas11" ></canvas>
-    <br>
-    <div id="data" class="data">Spain year 25 <button onclick="exportToCsvSpain25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSpain25"></p></div>
-    <canvas id="myCanvasSpain25" ></canvas>
-    <br>
-    <div id="data" class="data">France year 25 <button onclick="exportToCsvFrance25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoFrance25"></p></div>
-    <canvas id="myCanvasFrance25" ></canvas>
-    <br>
-    <div id="data" class="data">Germany year 25 <button onclick="exportToCsvGermany25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoGermany25"></p></div>
-    <canvas id="myCanvasGermany25" ></canvas>
 
     <script src="app.js"></script>
 </body>
