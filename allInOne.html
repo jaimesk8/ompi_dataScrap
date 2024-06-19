@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omip Get Data</title>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"
+            integrity="sha512-5vwN8yor2fFT9pgPS9p9R7AszYaNn0LkQElTXIsZFCL7ucT8zDCAqlQXDdaqgA1mZP47hdvztBMsIoFxq/FyyQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <style>
+        p, div, button {
+            font-family: Helvetica, sans-serif;
+        }   
+        canvas {
+            height: 100px;
+            width: 100px;
+        }
+
+        button {
+            margin-right: 0%;
+        }
+        .data {
+            padding: 1%;
+            margin-right: -10%;
+            border-radius: 5px;
+            height: 20%;
+            width: 20%;
+        }
+
+        /*=============== GOOGLE FONTS ===============*/
+        @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&display=swap");
+
+        /*=============== VARIABLES CSS ===============*/
+        :root {
+        --header-height: 3.5rem;
+
+        /*========== Colors ==========*/
+        --hue: 255;
+        --first-color: hsl(var(--hue), 90%, 60%);
+        --first-color-alt: hsl(var(--hue), 82%, 56%);
+        --first-color-light: hsl(var(--hue), 40%, 80%);
+        --title-color: hsl(var(--hue), 24%, 16%);
+        --text-color: hsl(var(--hue), 8%, 45%);
+        --text-color-light: hsl(var(--hue), 8%, 60%);
+        --white-color: hsl(0, 0%, 100%);
+        --body-color: hsl(0, 0%, 100%);
+        --container-color: hsl(0, 0%, 100%);
+        --shadow-color: hsla(var(--hue), 90%, 30%, 0.1);
+
+        /*========== Font and typography ==========*/
+        /*.5rem = 8px | 1rem = 16px ...*/
+        --body-font: "Syne", sans-serif;
+        --biggest-font-size: 2rem;
+        --h1-font-size: 1.5rem;
+        --h2-font-size: 1.25rem;
+        --h3-font-size: 1rem;
+        --normal-font-size: 0.938rem;
+        --small-font-size: 0.813rem;
+        --smaller-font-size: 0.75rem;
+
+        /*========== Font weight ==========*/
+        --font-regular: 400;
+        --font-medium: 500;
+        --font-semi-bold: 600;
+
+        /*========== z index ==========*/
+        --z-tooltip: 10;
+        --z-fixed: 100;
+        --z-modal: 1000;
+        }
+
+        /*========== Responsive typography ==========*/
+        @media screen and (min-width: 1150px) {
+        :root {
+            --biggest-font-size: 4.5rem;
+            --h1-font-size: 2.25rem;
+            --h2-font-size: 1.5rem;
+            --h3-font-size: 1.25rem;
+            --normal-font-size: 1.125rem;
+            --small-font-size: 0.875rem;
+            --smaller-font-size: 0.813rem;
+        }
+        }
+
+        /*=============== BASE ===============*/
+        * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        }
+
+        html {
+        scroll-behavior: smooth;
+        }
+
+        body,
+        input,
+        textarea,
+        button {
+        font-family: var(--body-font);
+        font-size: var(--normal-font-size);
+        }
+
+        body {
+        background-color: var(--body-color);
+        color: var(--text-color);
+        transition: background-color 0.4s;
+        }
+
+        input,
+        button,
+        textarea {
+        border: none;
+        outline: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+        color: var(--title-color);
+        font-weight: var(--font-semi-bold);
+        }
+
+        ul {
+        list-style: none;
+        }
+
+        a {
+        text-decoration: none;
+        }
+
+        img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        }
+
+        /*=============== THEME ===============*/
+        .nav__actions {
+        display: flex;
+        align-items: center;
+        column-gap: 1rem;
+        }
+
+        /*=============== REUSABLE CSS CLASSES ===============*/
+        .container {
+        max-width: 1120px;
+        margin-inline: 1.5rem;
+        }
+
+        .grid {
+        display: grid;
+        gap: 1.5rem;
+        }
+
+        .section {
+        padding-block: 5rem 1rem;
+        }
+        .section__title {
+        font-size: var(--h1-font-size);
+        text-align: center;
+        margin-bottom: 2rem;
+        }
+
+        .perfil {
+        width: 250px;
+        height: 250px;
+        background-color: var(--body-color);
+        border: 8px solid var(--first-color);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        transition: background-color 0.4s;
+        }
+
+        .perfil__content {
+        width: 180px;
+        height: 180px;
+        border: 10px solid var(--first-color);
+        border-radius: 50%;
+        overflow: hidden;
+        justify-content: center;
+        align-items: flex-end;
+        background: linear-gradient(
+            180deg,
+            hsl(var(--hue), 90%, 80%),
+            hsl(var(--hue), 90%, 30%)
+        );
+        }
+
+        .perfil__img {
+        width: 160px;
+        }
+
+        .main {
+        overflow: hidden;
+        }
+
+        /*=============== HEADER & NAV ===============*/
+        .header {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: transparent;
+        z-index: var(--z-fixed);
+        transition: background-color 0.4s, box-shadow 0.4s;
+        }
+
+        .nav {
+        position: relative;
+        height: var(--header-height);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+        .nav__logo {
+        color: var(--title-color); /* var(--white-color) with home type #2*/
+        font-weight: var(--font-semi-bold);
+        transition: color 0.4s;
+        }
+
+        .nav__toggle,
+        .nav__close {
+        display: inline-flex;
+        font-size: 1.25rem;
+        cursor: pointer;
+        }
+
+        .nav__toggle {
+        color: var(--title-color); /* var(--white-color) with home type #2*/
+        transition: color 0.4s;
+        }
+
+        .nav__close {
+        color: var(--title-color);
+        }
+
+        /* Navigation for mobile devices */
+        @media screen and (max-width: 1150px) {
+        .nav__menu {
+            position: fixed;
+            top: -100%;
+            left: 0;	  
+            background-color: var(--body-color);
+            width: 100%;
+            box-shadow: 0 12px 24px var(--shadow-color);
+            padding-block: 5rem 4rem;
+            transition: top 0.4s;
+        }
+        }
+
+        .nav__list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 2.5rem;
+        text-align: center;
+        }
+
+        .nav__link {
+        color: var(--title-color);
+        font-weight: var(--font-semi-bold);
+        transition: color 0.4s;
+        }
+
+        .nav__link:hover {
+        color: var(--first-color);
+        }
+
+        .nav__close {
+        position: absolute;
+        top: 1.15rem;
+        right: 1.5rem;
+        }
+
+        /* Show menu */
+        .show-menu {
+        top: 0;
+        }
+
+        /* Change background header */
+        .bg-header {
+        background-color: var(--body-color);
+        box-shadow: 0 2px 16px var(--shadow-color);
+        }
+
+        .bg-header :is(.nav__logo, .nav__toggle, .change-theme) {
+        color: var(--title-color);
+        }
+
+        /* Header background color of other pages */
+        .header-pages {
+        background-color: var(--body-color);
+        }
+
+        .header-pages :is(.nav__logo, .nav__toggle, .change-theme) {
+        color: var(--title-color);
+        }
+
+        /*=============== BUTTON ===============*/
+        .button {
+        display: inline-flex;
+        justify-content: center;
+        background-color: var(--first-color);
+        color: var(--white-color);
+        font-weight: var(--font-semi-bold);
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.4s, box-shadow 0.4s;
+        }
+
+        .button:hover {
+        background-color: var(--first-color-alt);
+        box-shadow: 0 8px 24px hsla(var(--hue), 90%, 30%, 0.3);
+        }
+
+        /*=============== MEDIA QUERIES ===============*/
+        /* For small devices */
+        @media screen and (max-width: 320px) {
+        .container {
+            margin-inline: 1rem;
+        }
+        }
+
+        /* For large devices */
+        @media screen and (min-width: 1150px) {
+        .container {
+            margin-inline: auto;
+        }
+        .nav {
+            height: calc(var(--header-height) + 2rem);
+            column-gap: 3rem;
+        }
+        .nav__toggle,
+        .nav__close {
+            display: none;
+        }
+        .nav__menu {
+            margin-left: auto;
+        }
+        .nav__list {
+            flex-direction: row;
+            align-items: center;
+            column-gap: 3rem;
+        }
+        }  
+    </style>
+</head>
+<body>
+    <!--=============== REMIXICONS ===============-->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+<!--==================== HEADER ====================-->
+<header class="header" id="header">
+  <nav class="nav container">
+    <a href="index.html" class="nav__logo">OMIP Data Scrap</a>
+
+    <div class="nav__menu" id="nav-menu">
+      <ul class="nav__list">
+        <li class="nav__item">
+          <a href="https://www.omip.pt/pt" class="nav__link">Source</a>
+        </li>
+
+        <li class="nav__item">
+          <a href="https://github.com/jaimesk8" class="nav__link">About Me</a>
+        </li>
+
+        <li class="nav__item">
+          <a href="index.html" class="button">Home</a>
+        </li>
+      </ul>
+
+      <!-- Close button -->
+      <div class="nav__close" id="nav-close">
+        <i class="ri-close-line"></i>
+      </div>
+    </div>
+
+    <div class="nav__actions">
+
+      <!-- Toggle button -->
+      <div class="nav__toggle" id="nav-toggle">
+        <i class="ri-apps-2-line"></i>
+      </div>
+    </div>
+  </nav>
+</header>
+    <br>
+    <div>
+        .
+    </div>
+    <br>
+    <div style="margin: 10%;">
+        <div id="data" class="data"><h3>PTEL</h3><br> <button onclick="exportToCsvPTEL()">Export to CSV</button><br>
+          <button onclick="exportToExcelPTEL()">Export to Excel</button>   <p id="demoPTEL"></p></div>
+        <canvas id="myCanvasPTEL" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>STEL</h3><br><button onclick="exportToCsvSPEL()">Export to CSV</button> <br>
+          <button onclick="exportToExcelSPEL()">Export to Excel</button>  <p id="demoSPEL"></p></div>
+        <canvas id="myCanvasSPEL" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-25 OMIP</h3><br>
+            <button onclick="exportToCsv()">Export to CSV</button><br>
+            <button onclick="exportToExcel25()">Export to Excel</button>
+              
+            <p id="demo"></p>
+        </div>
+        <canvas id="myCanvas"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-26 OMIP</h3><br>
+            <button onclick="exportToCsv26()">Export to CSV</button>
+            <button onclick="exportToExcel26()">Export to Excel</button>
+              
+            <p id="demo26"></p>
+        </div>
+        <canvas id="myCanvas26"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-27 OMIP</h3><br>
+            <button onclick="exportToCsv27()">Export to CSV</button><br>
+            <button onclick="exportToExcel27()">Export to Excel</button>
+              
+            <p id="demo27"></p>
+        </div>
+        <canvas id="myCanvas27"></canvas>
+        <br>
+        <div id="data" class="data"><h3>YR-29 OMIP</h3><br>
+            <button onclick="exportToCsv29()">Export to CSV</button><br>
+            <button onclick="exportToExcel29()">Export to Excel</button>
+              
+            <p id="demo29"></p>
+        </div>
+        <canvas id="myCanvas29"></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q1-24</h3><br> <button onclick="exportToCsv2()">Export to CSV</button> <br><button onclick="exportToExcelQ1_24()">Export to Excel</button>  <p id="demo1"></p>
+        </div>
+        <canvas id="myCanvas2" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q2-24</h3><br> <button onclick="exportToCsv3()">Export to CSV</button><br><button onclick="exportToExcelQ2_24()">Export to Excel</button>  <p id="demo2"></p></div>
+        <canvas id="myCanvas3" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q3-24</h3><br><button onclick="exportToCsv4()">Export to CSV</button> <br><button onclick="exportToExcelQ3_24()">Export to Excel</button>  <p id="demo3"></p></div>
+        <canvas id="myCanvas4" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Q4-24</h3><br> <button onclick="exportToCsv5()">Export to CSV</button> <br><button onclick="exportToExcelQ4_24()">Export to Excel</button>  <p id="demo4"></p></div>
+        <canvas id="myCanvas5" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Março 24</h3><br> <button onclick="exportToCsv6()">Export to CSV</button><br><button onclick="exportToExcelmar24()">Export to Excel</button>  <p id="demo5"></p></div>
+        <canvas id="myCanvas6" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Abril 24</h3><br><button onclick="exportToCsv7()">Export to CSV</button><br><button onclick="exportToExcelabr24()">Export to Excel</button>   <p id="demo6"></p></div>
+        <canvas id="myCanvas7" ></canvas>
+        <br>
+        <div id="data" class="data">Maio 24 <button onclick="exportToCsv8()">Export to CSV</button><br><button onclick="exportToExcelmay24()">Export to Excel</button>   <p id="demo7"></p></div>
+        <canvas id="myCanvas8" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Junho 24</h3><br> <button onclick="exportToCsv9()">Export to CSV</button><br><button onclick="exportToExceljun24()">Export to Excel</button>   <p id="demo8"></p></div>
+        <canvas id="myCanvas9" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Julho 24</h3><br> <button onclick="exportToCsv10()">Export to CSV</button><br><button onclick="exportToExceljul24()">Export to Excel</button>   <p id="demo9"></p></div>
+        <canvas id="myCanvas10" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Agosto 24</h3><br> <button onclick="exportToCsv11()">Export to CSV</button><br><button onclick="exportToExcelagu24()">Export to Excel</button>   <p id="demo10"></p></div>
+        <canvas id="myCanvas11" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Spain year 25</h3><br> <button onclick="exportToCsvSpain25()">Export to CSV</button> <br><button onclick="exportToExcelSpain25()">Export to Excel</button>  <p id="demoSpain25"></p></div>
+        <canvas id="myCanvasSpain25" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>France year 25 </h3><br><button onclick="exportToCsvFrance25()">Export to CSV</button><br><button onclick="exportToExcelFra25()">Export to Excel</button>   <p id="demoFrance25"></p></div>
+        <canvas id="myCanvasFrance25" ></canvas>
+        <br>
+        <div id="data" class="data"><h3>Germany year 25 </h3><br><button onclick="exportToCsvGermany25()">Export to CSV</button> <br><button onclick="exportToExcelAlem25()">Export to Excel</button>   <p id="demoGermany25"></p></div>
+        <canvas id="myCanvasGermany25" ></canvas>
+    </div>
+
+    <script>
+         const feedDisplay = document.querySelector("#data");
+
+
+    ////HEADER////
+    /*=============== SHOW MENU ===============*/
+    const navMenu = document.getElementById('nav-menu'),
+    navToggle = document.getElementById('nav-toggle'),
+    navClose = document.getElementById('nav-close')
+
+    /*===== MENU SHOW =====*/
+    /* Validate if constant exists */
+    if(navToggle){
+    navToggle.addEventListener('click', () =>{
+    navMenu.classList.add('show-menu')
+    })
+    }
+
+    /*===== MENU HIDDEN =====*/
+    /* Validate if constant exists */
+    if(navClose){
+    navClose.addEventListener('click', () =>{
+    navMenu.classList.remove('show-menu')
+    })
+    }
+
+    /*=============== CHANGE BACKGROUND HEADER ===============*/
+    const bgHeader = () =>{
+    const header = document.getElementById('header')
+    /* Add a class if the bottom offset is greater than 50 of the viewport */
+    this.scrollY >= 50 ? header.classList.add('bg-header') : 
+                    header.classList.remove('bg-header')
+    }
+    window.addEventListener('scroll', bgHeader)
+
+
+        
+        const d = new Date();
+        const spel = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/SPELBASE/0/I')
+        const ptel = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/PTELBASE/0/I')
+        const yr25 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-25/0/0/0/1');
+        const yr25France = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FFBYR-25/0/0/0/1');
+        const yr25Germany = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FDBYR-25/0/0/0/1');
+        const yr25Spain = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FTBYR-25/0/0/0/1');
+        const yr26 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-26/0/0/0/1');
+        const yr27 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-27/0/0/0/1');
+        const yr29 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBYR-29/0/0/0/1');
+
+        const quarter1_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ1-24/0/0/0/1');
+        const quarter2_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ2-24/0/0/0/1');
+        const quarter3_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ3-24/0/0/0/1');
+        const quarter4_24 = 'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/en/javali/get_chart/FPBQ4-24/0/0/0/1');
+
+        const mar24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMMAR-24/0/0/0/1');	
+        const apr24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMAPR-24/0/0/0/1');
+        const may24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMMAY-24/0/0/0/1');
+        const jun24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMJUN-24/0/0/0/1');
+        const jul24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMJUL-24/0/0/0/1');
+        const agu24 =  'https://corsproxy.io/?' + encodeURIComponent('https://www.omip.pt/pt/javali/get_chart/FPBMAUG-24/0/0/0/1');
+        
+            fetch(yr25)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo").innerHTML = titleChart;
+
+            
+                new Chart('myCanvas', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-25.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcel25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-25.xlsx');
+                };
+        
+            })
+            .catch(error => console.error('Error:', error));  
+
+            fetch(yr26)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo26").innerHTML = titleChart;
+            
+                new Chart('myCanvas26', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv26 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-26.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcel26 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-26.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+            //year 2027
+            fetch(yr27)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo27").innerHTML = titleChart;
+            
+                new Chart('myCanvas27', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv27 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-27.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcel27 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-27.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+            //year 2029
+            fetch(yr29)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData = data.series[0].data;
+
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+                
+                //console.log(seriesData);
+                //values fetch date 
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo26").innerHTML = titleChart;
+            
+                new Chart('myCanvas29', {
+                    type: 'line',
+                    data: {
+                        //labels: datesOnly,
+                        datasets: [{
+                            data: seriesData, 
+                            borderColor: "green", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day' // You can adjust this based on your data granularity
+                                    }
+                                }
+                            }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv29 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "YR-29.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcel29 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-29.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+
+
+
+
+            //quarter Q1-24 
+            fetch(quarter1_24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData2 = data.series[0].data;
+                // Convert timestamps in the data array
+                var formattedDataArray = seriesData2.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData2);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo1").innerHTML = titleChart;
+
+                new Chart('myCanvas2', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData2, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                        scales: {
+                                    x: {
+                                        type: 'time',
+                                        time: {
+                                            unit: 'day' // You can adjust this based on your data granularity
+                                        }
+                                    }
+                                }
+                        }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv2 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "Q1-24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelQ1_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q1-24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+            //quarter Q2-24 
+            fetch(quarter2_24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+        
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData3 = data.series[0].data;
+                //console.log(seriesData3);
+                var formattedDataArray = seriesData3.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo2").innerHTML = titleChart;
+
+                new Chart('myCanvas3', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData3, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day' // You can adjust this based on your data granularity
+                                }
+                            }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv3 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "Q2-24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelQ2_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q2-24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+            //quarter Q3-24 
+            fetch(quarter3_24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData4 = data.series[0].data;
+
+                var formattedDataArray = seriesData4.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData4);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo3").innerHTML = titleChart;
+
+                new Chart('myCanvas4', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData4, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                        scales: {
+                                    x: {
+                                        type: 'time',
+                                        time: {
+                                            unit: 'day' // You can adjust this based on your data granularity
+                                        }
+                                    }
+                                }
+                        }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv4 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "Q3-24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelQ3_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q3-24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+
+            //quarter Q4-24 
+            fetch(quarter4_24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData5 = data.series[0].data;
+                //console.log(seriesData5);
+
+                var formattedDataArray = seriesData5.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo4").innerHTML = titleChart;
+
+                new Chart('myCanvas5', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData5, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv5 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "Q4-24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelQ4_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q4-24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+
+            //mar24
+            fetch(mar24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData6 = data.series[0].data;
+
+                var formattedDataArray = seriesData6.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo5").innerHTML = titleChart;
+
+                new Chart('myCanvas6', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData6, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv6 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "mar24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelmar24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'mar24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+            //abril 24
+                fetch(apr24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData7 = data.series[0].data;
+                //console.log(seriesData);
+
+                var formattedDataArray = seriesData7.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo6").innerHTML = titleChart;
+
+                new Chart('myCanvas7', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData7, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv7 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "apr24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelabr24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'abr24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+                //maio_24
+                fetch(may24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData8 = data.series[0].data;
+                //console.log(seriesData);
+
+                var formattedDataArray = seriesData8.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo7").innerHTML = titleChart;
+
+                new Chart('myCanvas8', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData8, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv8 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "may24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelmay24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'may24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+            //junho_24
+            fetch(jun24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData9 = data.series[0].data;
+
+                var formattedDataArray = seriesData9.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo8").innerHTML = titleChart;
+
+                new Chart('myCanvas9', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData9, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv9 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "jun24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExceljun24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'jun24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+                //julho_24
+                fetch(jul24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData10 = data.series[0].data;
+                //console.log(seriesData);
+
+                var formattedDataArray = seriesData10.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo9").innerHTML = titleChart;
+
+                new Chart('myCanvas10', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData10, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv10 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "jul24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExceljul24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'jul24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));  
+
+            
+            //agosto_24
+                fetch(agu24)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demo10").innerHTML = titleChart;
+
+                new Chart('myCanvas11', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsv11 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "agu_24.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelagu24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'agu24.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+            
+            //france 2025 
+            fetch(yr25France)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoFrance25").innerHTML = titleChart;
+
+                new Chart('myCanvasFrance25', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "red", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvFrance25 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "FR_year25.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelFra25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Fra25.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error));
+            
+                //Germany 2025 
+                fetch(yr25Germany)
+                .then(function(response) {
+                    // When the page is loaded convert it to text
+                    return response.text()
+                })
+                .then(function(html) {
+                    // Initialize the DOM parser
+                    var parser = new DOMParser();
+                    // Parse the text
+                    var doc = parser.parseFromString(html, "text/html");
+                    feedDisplay.insertAdjacentHTML("beforeend", html)
+                    
+                    var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                    var data = JSON.parse(dataChartAttr);
+                    var seriesData11 = data.series[0].data;
+
+                    var formattedDataArray = seriesData11.map(function(item) {
+                        return [formatDate(item[0]), item[1]];
+                    });
+
+                    //console.log(formattedDataArray)
+
+                    ///dividing the data 
+                    var datesOnly = formattedDataArray.map(function(item) {
+                        return formatDate(new Date(item[0])); // Extract only the date
+                    });
+                    
+                    var valuesOnly = formattedDataArray.map(function(item) {
+                        return item[1]; // Extract only the date
+                    });
+
+                    //console.log(seriesData);
+                    var titleChart = data.title.text;
+                    console.log(titleChart)
+                    document.getElementById("demoGermany25").innerHTML = titleChart;
+
+                    new Chart('myCanvasGermany25', {
+                        type: 'line',
+                        data: {
+                            //labels: years,
+                            datasets: [{
+                                data: seriesData11, 
+                                borderColor: "red", 
+                                fill: false
+                                }]
+                        },
+                        options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day' // You can adjust this based on your data granularity
+                                }
+                            }
+                        }
+                        }
+                    });
+
+                    var Results = formattedDataArray;
+                    exportToCsvGermany25 = function() {
+                        var CsvString = "";
+                        Results.forEach(function(RowItem, RowIndex) {
+                            CsvString += RowItem.join(",") + "\r\n";
+                        });
+                        CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                        var x = document.createElement("A");
+                        x.setAttribute("href", CsvString);
+                        x.setAttribute("download", "Alem_year25.csv");
+                        document.body.appendChild(x);
+                        x.click();
+                    };
+
+                    exportToExcelAlem25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Alem25.xlsx');
+                };
+                })
+                .catch(error => console.error('Error:', error)); 
+            
+            fetch(yr25Spain)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoSpain25").innerHTML = titleChart;
+
+                new Chart('myCanvasSpain25', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvSpain25 = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "Spain_year25.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelSpain25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Spain25.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error)); 
+
+            //SPEL  
+            fetch(spel)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoSPEL").innerHTML = titleChart;
+
+                new Chart('myCanvasSPEL', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvSPEL = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "SPEL.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelSPEL = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'SPEL.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error)); 
+
+            //PTEL  
+            fetch(ptel)
+            .then(function(response) {
+                // When the page is loaded convert it to text
+                return response.text()
+            })
+            .then(function(html) {
+                // Initialize the DOM parser
+                var parser = new DOMParser();
+                // Parse the text
+                var doc = parser.parseFromString(html, "text/html");
+                feedDisplay.insertAdjacentHTML("beforeend", html)
+                
+                var dataChartAttr = doc.querySelector('.charts-highchart.chart').getAttribute('data-chart');
+                var data = JSON.parse(dataChartAttr);
+                var seriesData11 = data.series[0].data;
+
+                var formattedDataArray = seriesData11.map(function(item) {
+                    return [formatDate(item[0]), item[1]];
+                });
+
+                //console.log(formattedDataArray)
+
+                ///dividing the data 
+                var datesOnly = formattedDataArray.map(function(item) {
+                    return formatDate(new Date(item[0])); // Extract only the date
+                });
+                
+                var valuesOnly = formattedDataArray.map(function(item) {
+                    return item[1]; // Extract only the date
+                });
+
+                //console.log(seriesData);
+                var titleChart = data.title.text;
+                console.log(titleChart)
+                document.getElementById("demoPTEL").innerHTML = titleChart;
+
+                new Chart('myCanvasPTEL', {
+                    type: 'line',
+                    data: {
+                        //labels: years,
+                        datasets: [{
+                            data: seriesData11, 
+                            borderColor: "blue", 
+                            fill: false
+                            }]
+                    },
+                    options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day' // You can adjust this based on your data granularity
+                            }
+                        }
+                    }
+                    }
+                });
+
+                var Results = formattedDataArray;
+                exportToCsvPTEL = function() {
+                    var CsvString = "";
+                    Results.forEach(function(RowItem, RowIndex) {
+                        CsvString += RowItem.join(",") + "\r\n";
+                    });
+                    CsvString = "data:application/csv," + encodeURIComponent(CsvString);
+                    var x = document.createElement("A");
+                    x.setAttribute("href", CsvString);
+                    x.setAttribute("download", "PTEL.csv");
+                    document.body.appendChild(x);
+                    x.click();
+                };
+
+                exportToExcelPTEL = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'PTEL.xlsx');
+                };
+            })
+            .catch(error => console.error('Error:', error)); 
+
+
+
+            // Function to convert timestamp to date string in "YYYY-MM-DD" format
+            function formatDate(timestamp) {
+                var date = new Date(timestamp);
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+
+   
+    </script>
+</body>
+</html>
