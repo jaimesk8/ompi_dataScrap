@@ -131,6 +131,23 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcel25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-25.xlsx');
+                };
+        
             })
             .catch(error => console.error('Error:', error));  
 
@@ -206,6 +223,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "YR-26.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcel26 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-26.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));
@@ -284,6 +317,22 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcel27 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-27.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));
 
@@ -360,6 +409,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "YR-29.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcel29 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'YR-29.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));
@@ -440,6 +505,22 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelQ1_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q1-24.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));  
 
@@ -513,6 +594,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "Q2-24.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelQ2_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q2-24.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));  
@@ -589,6 +686,22 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelQ3_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q3-24.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));
 
@@ -663,6 +776,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "Q4-24.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelQ4_24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Q4-24.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));  
@@ -740,6 +869,22 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelmar24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'mar24.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));  
 
@@ -814,6 +959,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "apr24.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelabr24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'abr24.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));  
@@ -890,11 +1051,27 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelmay24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'may24.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));  
 
             //junho_24
-             fetch(jun24)
+            fetch(jun24)
             .then(function(response) {
                 // When the page is loaded convert it to text
                 return response.text()
@@ -964,6 +1141,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "jun24.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExceljun24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'jun24.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));  
@@ -1039,6 +1232,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "jul24.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExceljul24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'jul24.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));  
@@ -1116,6 +1325,22 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelagu24 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'agu24.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error));
             
@@ -1190,6 +1415,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "FR_year25.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelFra25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Fra25.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error));
@@ -1266,10 +1507,25 @@ window.addEventListener('scroll', bgHeader)
                      document.body.appendChild(x);
                      x.click();
                  };
+
+                 exportToExcelAlem25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Alem25.xlsx');
+                };
              })
              .catch(error => console.error('Error:', error)); 
             
-            //Germany 2025 
             fetch(yr25Spain)
             .then(function(response) {
                 // When the page is loaded convert it to text
@@ -1340,6 +1596,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "Spain_year25.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelSpain25 = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'Spain25.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error)); 
@@ -1416,10 +1688,26 @@ window.addEventListener('scroll', bgHeader)
                     document.body.appendChild(x);
                     x.click();
                 };
+
+                exportToExcelSPEL = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'SPEL.xlsx');
+                };
             })
             .catch(error => console.error('Error:', error)); 
 
-            //SPEL  
+            //PTEL  
             fetch(ptel)
             .then(function(response) {
                 // When the page is loaded convert it to text
@@ -1490,6 +1778,22 @@ window.addEventListener('scroll', bgHeader)
                     x.setAttribute("download", "PTEL.csv");
                     document.body.appendChild(x);
                     x.click();
+                };
+
+                exportToExcelPTEL = function() {
+                    // Add a header row
+                    var header = ["Date", "Price"];
+                    var dataWithHeader = [header, ...formattedDataArray];
+                    
+                    // Create a workbook and a worksheet
+                    var wb = XLSX.utils.book_new();
+                    var ws = XLSX.utils.aoa_to_sheet(dataWithHeader);
+                    
+                    // Add the worksheet to the workbook
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                
+                    // Generate Excel file and download
+                    XLSX.writeFile(wb, 'PTEL.xlsx');
                 };
             })
             .catch(error => console.error('Error:', error)); 
