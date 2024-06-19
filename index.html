@@ -14,6 +14,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <style>
         p, div, button {
             font-family: Helvetica, sans-serif;
@@ -80,78 +81,84 @@
     </div>
     <br>
     <div style="margin: 10%;">
-        <div id="data" class="data"><h3>PTEL</h3><br> <button onclick="exportToCsvPTEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoPTEL"></p></div>
+        <div id="data" class="data"><h3>PTEL</h3><br> <button onclick="exportToCsvPTEL()">Export to CSV</button><br>
+          <button onclick="exportToExcelPTEL()">Export to Excel</button>   <p id="demoPTEL"></p></div>
         <canvas id="myCanvasPTEL" ></canvas>
         <br>
-        <div id="data" class="data"><h3>STEL</h3><br><button onclick="exportToCsvSPEL()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSPEL"></p></div>
+        <div id="data" class="data"><h3>STEL</h3><br><button onclick="exportToCsvSPEL()">Export to CSV</button> <br>
+          <button onclick="exportToExcelSPEL()">Export to Excel</button>  <p id="demoSPEL"></p></div>
         <canvas id="myCanvasSPEL" ></canvas>
         <br>
         <div id="data" class="data"><h3>YR-25 OMIP</h3><br>
-            <button onclick="exportToCsv()">Export to CSV</button>
-            <p>Fetched at:</p> 
+            <button onclick="exportToCsv()">Export to CSV</button><br>
+            <button onclick="exportToExcel25()">Export to Excel</button>
+              
             <p id="demo"></p>
         </div>
         <canvas id="myCanvas"></canvas>
         <br>
         <div id="data" class="data"><h3>YR-26 OMIP</h3><br>
             <button onclick="exportToCsv26()">Export to CSV</button>
-            <p>Fetched at:</p> 
+            <button onclick="exportToExcel26()">Export to Excel</button>
+              
             <p id="demo26"></p>
         </div>
         <canvas id="myCanvas26"></canvas>
         <br>
         <div id="data" class="data"><h3>YR-27 OMIP</h3><br>
-            <button onclick="exportToCsv27()">Export to CSV</button>
-            <p>Fetched at:</p> 
+            <button onclick="exportToCsv27()">Export to CSV</button><br>
+            <button onclick="exportToExcel27()">Export to Excel</button>
+              
             <p id="demo27"></p>
         </div>
         <canvas id="myCanvas27"></canvas>
         <br>
         <div id="data" class="data"><h3>YR-29 OMIP</h3><br>
-            <button onclick="exportToCsv29()">Export to CSV</button>
-            <p>Fetched at:</p> 
+            <button onclick="exportToCsv29()">Export to CSV</button><br>
+            <button onclick="exportToExcel29()">Export to Excel</button>
+              
             <p id="demo29"></p>
         </div>
         <canvas id="myCanvas29"></canvas>
         <br>
-        <div id="data" class="data"><h3>Q1-24</h3><br> <button onclick="exportToCsv2()">Export to CSV</button> <p>Fetched at:</p> <p id="demo1"></p>
+        <div id="data" class="data"><h3>Q1-24</h3><br> <button onclick="exportToCsv2()">Export to CSV</button> <br><button onclick="exportToExcelQ1_24()">Export to Excel</button>  <p id="demo1"></p>
         </div>
         <canvas id="myCanvas2" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Q2-24</h3><br> <button onclick="exportToCsv3()">Export to CSV</button> <p>Fetched at:</p> <p id="demo2"></p></div>
+        <div id="data" class="data"><h3>Q2-24</h3><br> <button onclick="exportToCsv3()">Export to CSV</button><br><button onclick="exportToExcelQ2_24()">Export to Excel</button>  <p id="demo2"></p></div>
         <canvas id="myCanvas3" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Q3-24</h3><br><button onclick="exportToCsv4()">Export to CSV</button> <p>Fetched at:</p> <p id="demo3"></p></div>
+        <div id="data" class="data"><h3>Q3-24</h3><br><button onclick="exportToCsv4()">Export to CSV</button> <br><button onclick="exportToExcelQ3_24()">Export to Excel</button>  <p id="demo3"></p></div>
         <canvas id="myCanvas4" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Q4-24</h3><br> <button onclick="exportToCsv5()">Export to CSV</button> <p>Fetched at:</p> <p id="demo4"></p></div>
+        <div id="data" class="data"><h3>Q4-24</h3><br> <button onclick="exportToCsv5()">Export to CSV</button> <br><button onclick="exportToExcelQ4_24()">Export to Excel</button>  <p id="demo4"></p></div>
         <canvas id="myCanvas5" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Março 24</h3><br> <button onclick="exportToCsv6()">Export to CSV</button><p>Fetched at:</p> <p id="demo5"></p></div>
+        <div id="data" class="data"><h3>Março 24</h3><br> <button onclick="exportToCsv6()">Export to CSV</button><br><button onclick="exportToExcelmar24()">Export to Excel</button>  <p id="demo5"></p></div>
         <canvas id="myCanvas6" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Abril 24</h3><br><button onclick="exportToCsv7()">Export to CSV</button> <p>Fetched at:</p> <p id="demo6"></p></div>
+        <div id="data" class="data"><h3>Abril 24</h3><br><button onclick="exportToCsv7()">Export to CSV</button><br><button onclick="exportToExcelabr24()">Export to Excel</button>   <p id="demo6"></p></div>
         <canvas id="myCanvas7" ></canvas>
         <br>
-        <div id="data" class="data">Maio 24 <button onclick="exportToCsv8()">Export to CSV</button> <p>Fetched at:</p> <p id="demo7"></p></div>
+        <div id="data" class="data">Maio 24 <button onclick="exportToCsv8()">Export to CSV</button><br><button onclick="exportToExcelmay24()">Export to Excel</button>   <p id="demo7"></p></div>
         <canvas id="myCanvas8" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Junho 24</h3><br> <button onclick="exportToCsv9()">Export to CSV</button> <p>Fetched at:</p> <p id="demo8"></p></div>
+        <div id="data" class="data"><h3>Junho 24</h3><br> <button onclick="exportToCsv9()">Export to CSV</button><br><button onclick="exportToExceljun24()">Export to Excel</button>   <p id="demo8"></p></div>
         <canvas id="myCanvas9" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Julho 24</h3><br> <button onclick="exportToCsv10()">Export to CSV</button> <p>Fetched at:</p> <p id="demo9"></p></div>
+        <div id="data" class="data"><h3>Julho 24</h3><br> <button onclick="exportToCsv10()">Export to CSV</button><br><button onclick="exportToExceljul24()">Export to Excel</button>   <p id="demo9"></p></div>
         <canvas id="myCanvas10" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Agostop 24</h3><br> <button onclick="exportToCsv11()">Export to CSV</button> <p>Fetched at:</p> <p id="demo10"></p></div>
+        <div id="data" class="data"><h3>Agosto 24</h3><br> <button onclick="exportToCsv11()">Export to CSV</button><br><button onclick="exportToExcelagu24()">Export to Excel</button>   <p id="demo10"></p></div>
         <canvas id="myCanvas11" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Spain year 25</h3><br> <button onclick="exportToCsvSpain25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoSpain25"></p></div>
+        <div id="data" class="data"><h3>Spain year 25</h3><br> <button onclick="exportToCsvSpain25()">Export to CSV</button> <br><button onclick="exportToExcelSpain25()">Export to Excel</button>  <p id="demoSpain25"></p></div>
         <canvas id="myCanvasSpain25" ></canvas>
         <br>
-        <div id="data" class="data"><h3>France year 25 </h3><br><button onclick="exportToCsvFrance25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoFrance25"></p></div>
+        <div id="data" class="data"><h3>France year 25 </h3><br><button onclick="exportToCsvFrance25()">Export to CSV</button><br><button onclick="exportToExcelFra25()">Export to Excel</button>   <p id="demoFrance25"></p></div>
         <canvas id="myCanvasFrance25" ></canvas>
         <br>
-        <div id="data" class="data"><h3>Germany year 25 </h3><br><button onclick="exportToCsvGermany25()">Export to CSV</button> <p>Fetched at:</p> <p id="demoGermany25"></p></div>
+        <div id="data" class="data"><h3>Germany year 25 </h3><br><button onclick="exportToCsvGermany25()">Export to CSV</button> <br><button onclick="exportToExcelAlem25()">Export to Excel</button>   <p id="demoGermany25"></p></div>
         <canvas id="myCanvasGermany25" ></canvas>
     </div>
 
